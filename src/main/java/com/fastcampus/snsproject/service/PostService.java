@@ -109,4 +109,8 @@ public class PostService {
 
         return likeEntityRepository.countByPost(postEntity);
     }
+
+    public void comment(Integer postId, String userName) {
+
+    }
 }
