@@ -1,6 +1,7 @@
 package com.fastcampus.snsproject.model;
 
 import com.fastcampus.snsproject.model.entity.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,12 +21,13 @@ import java.util.List;
 public class User implements UserDetails {
 
     private Integer id;
-    private String userName;
+    private String username;
     private String password;
     private UserRole userRole;
     private Timestamp registeredAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
+
 
     public static User fromEntity(UserEntity entity) {
         return new User(
@@ -40,31 +42,31 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.getUserRole().toString()));
     }
 
     @Override
-    public String getUsername() {
-        return this.userName;
-    }
-
-    @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return this.deletedAt == null;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return this.deletedAt == null;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return this.deletedAt == null;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return this.deletedAt == null;
     }
