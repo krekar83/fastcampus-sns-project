@@ -1,5 +1,4 @@
-spring:
-  jpa:
+spring.jpa:
     database: postgresql
     hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate.ddl-auto: update
@@ -7,7 +6,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  sql:
+
+spring.sql:
     init:
       platform: postgres
 
@@ -16,29 +16,35 @@ jwt:
   # 30 days
   token.expired-time-ms: 2592000000
 
-#==================== Heroku Postgres 정보 변경 필요!!! ====================
-# 1.1 제공받은 정보
-#spring.datasource:
-#  hikari.maxium-pool-size: 4
-#  url: jdbc:postgresql://ec2-54-163-140-5.compute-1.amazonaws.com:5432/de3cestlqkekp0
-#  username: u7bjqnltofpp1p
-#  password: p240170e441a1aa72fee6bba192898a83e9c30edf1f7aeb94329e15e34bc3dc2c
-#  driver-class-name: org.postgresql.Driver
-
-# 1.2 개발에 사용한 정보(개인 결제)
 spring.datasource:
   hikari.maxium-pool-size: 4
   url: jdbc:postgresql://ec2-34-194-158-176.compute-1.amazonaws.com:5432/d2qlllo1jm5ij1
   username: drktaleyslswsc
   password: 04390ee83ba4eecb68725e819a790562dcda88e7286439eeef155b144eb74dc8
   driver-class-name: org.postgresql.Driver
-#=========================================================================
 
+spring.redis:
+  url: redis://:p4ca475fd752bb3af32f904ea1fd55e6e559735777cc517ffd190e60a504641c4@ec2-52-7-45-53.compute-1.amazonaws.com:8769
 
-#================= Heroku Data for Redis 정보 변경 필요!!! =================
-# 1.1 Github repo.에 정의된 정보
-# spring.redis.url: redis://:p16eb8136279b2629c931d539b89c2491e9ef83cd2d9bc777afec1b649cb9b10d@ec2-3-224-198-214.compute-1.amazonaws.com:12979
-
-# 1.2 개발에 사용한 정보(개인 결제)
-spring.redis.url: redis://:p4ca475fd752bb3af32f904ea1fd55e6e559735777cc517ffd190e60a504641c4@ec2-52-7-45-53.compute-1.amazonaws.com:8769
-#=========================================================================
+spring:
+  kafka:
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: SCRAM-SHA-256
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="yqsgbdgq" password="NwUOkuOYzVaKx24hRkM-k968wzxQCntI";
+    consumer:
+      properties.spring.json.trusted.packages: "*"
+      bootstrap-servers: dory-01.srvs.cloudkafka.com:9094, dory-02.srvs.cloudkafka.com:9094, dory-03.srvs.cloudkafka.com:9094
+      group-id: yqsgbdgq-alarms
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    listener:
+      ack-mode: MANUAL
+    producer:
+      bootstrap-servers: dory-01.srvs.cloudkafka.com:9094, dory-02.srvs.cloudkafka.com:9094, dory-03.srvs.cloudkafka.com:9094
+      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties.enable.idempotence: false
+    topic:
+      alarm: yqsgbdgq-alarm
